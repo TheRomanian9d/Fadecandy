@@ -4,11 +4,12 @@ import opc
 import time
 from letters import *
 
-led_colour=[(0,0,0)]*360
-
 client = opc.Client('localhost:7890')
 
+led_colour=[(0,0,0)]*360
+
 def print_letters(*args):
+    led_colour=[(0,0,0)]*360
     n=round(29 - (len(args)*7-8)/2)
     for value in args:
         for point in value:
@@ -27,32 +28,33 @@ def print_letters(*args):
     client.put_pixels(led_colour)
     client.put_pixels(led_colour)
 
-"""print (enumerate(led_colour))
-for item in enumerate(led_colour):
-    time.sleep(1)
-    print (item)
-    if item[0]%2 == 0:
-        #need to get values out of tuple
-        r, g, b = item[1]
-        print('R', r, 'G', g, 'B:',b)
-        r = r-120
-        g = 255
-        b = 255
-        
-        #create changed tuple (uses some values from old and some new) 
-        new_colour =(r,g,b)
-        led_colour[item[0]] = new_colour
-        print(new_colour)
-        
-    client.put_pixels(led_colour)
-    client.put_pixels(led_colour)
-"""
 client.put_pixels(led_colour)
 #need to send it twice if not constantly sending values 
 #due to interpolation setting on fadecandy
 client.put_pixels(led_colour)
-print (led_colour)
 time.sleep(1)
 
+def animation_choice(number):
+    match status:
+        case 1:
+            print_letters(g,r,a)
+            time.sleep(1)
+            print_letters(i,x)
+            time.sleep(1)
+            print_letters(p,e,w,space,p,e,w)
+        case 2:
+            return
+        case 3:
+            return
+        case 4:
+            return
+        case 5:
+            return
+        case _:
+            print("Option not recognised")
 
 print_letters(g,r,a)
+time.sleep(1)
+print_letters(i,x)
+time.sleep(1)
+print_letters(p,e,w,space,p,e,w)
