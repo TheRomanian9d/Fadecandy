@@ -9,6 +9,7 @@ client = opc.Client('localhost:7890')
 led_colour=[(0,0,0)]*360
 
 def print_letters(*args):
+    global led_colour
     led_colour=[(0,0,0)]*360
     n=round(29 - (len(args)*7-8)/2)
     for value in args:
@@ -26,23 +27,27 @@ def print_letters(*args):
         n+=6
 
     client.put_pixels(led_colour)
-    client.put_pixels(led_colour)
 
-client.put_pixels(led_colour)
-#need to send it twice if not constantly sending values 
-#due to interpolation setting on fadecandy
-client.put_pixels(led_colour)
-time.sleep(1)
+
 
 def animation_choice(number):
-    match status:
-        case 1:
+    match number:
+        case 1: #atuhor introduction
             print_letters(g,r,a)
             time.sleep(1)
             print_letters(i,x)
             time.sleep(1)
             print_letters(p,e,w,space,p,e,w)
-        case 2:
+            time.sleep(1)
+            #create a moving underline
+            led = 60*5
+            while led < 60*6:
+                led_colour[led] = (255,0,0)
+                client.put_pixels(led_colour)
+                time.sleep(0.1)
+                led +=1
+
+        case 2: #prints user's name
             return
         case 3:
             return
@@ -53,8 +58,4 @@ def animation_choice(number):
         case _:
             print("Option not recognised")
 
-print_letters(g,r,a)
-time.sleep(1)
-print_letters(i,x)
-time.sleep(1)
-print_letters(p,e,w,space,p,e,w)
+animation_choice(1)
