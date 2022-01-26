@@ -49,18 +49,14 @@ def animation_choice(number):
                 led +=1
 
         case 2: #prints user's name
-            name = input("What is your name?")
+            name = input("What is your name?\n")
             if len(name) < 10:
-                print (len(name))
-                time.sleep(1)
                 chars = []
                 for letter in name:
                     if letter.isalpha():
                         chars.append(globals()[letter])
                     else:
                         print("Name contains unrecognised characters")
-                print(chars)
-                time.sleep(1)
                 print_letters(chars)
                 time.sleep(1)
 
