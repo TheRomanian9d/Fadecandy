@@ -4,6 +4,7 @@ import opc
 import time
 from letters import *
 import colorsys
+from random import randrange
 
 client = opc.Client('localhost:7890') #connects code to LED emulator
 
@@ -78,7 +79,32 @@ def animation_choice(number):
             else:
                 print("Name is too long")
         case 3:
-            return
+            rain = [0]*360
+            print(rain) #debug
+            while True:
+                rain_point = randrange(60)
+                print(rain_point) #debug
+                if rain[rain_point] == 0:
+                    drop = randrange(3,6)
+                    print(drop) #debug
+                    rain[rain_point] = drop
+                #to do: print to led and do a loop where 1 is taken away from each value that is not 0
+                else:
+                    pass
+                #to do: shift leds down
+                #to do: print to led and do a loop where 1 is taken away from each value that is not 0
+                time.sleep(1)
+                print(rain) #-debug- check to see how random rain points get assigned
+                #put line to print to emulator
+                n=0
+                for pixel in rain[0:60]:
+                    if pixel > 0:
+                        rain[n] -= 1
+                    else:
+                        pass
+                    n+=1
+
+
         case 4:
             return
         case 5:
@@ -86,5 +112,5 @@ def animation_choice(number):
         case _:
             print("Option not recognised")
 
-choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n\ntype number:"))
+choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n\ntype number:"))
 animation_choice(choice)
