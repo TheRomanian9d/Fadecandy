@@ -82,6 +82,13 @@ def animation_choice(number):
             rain = [0]*360
             print(rain) #debug
             while True:
+                n=0
+                for pixel in rain[0:60]:
+                    if pixel > 0:
+                        rain[n] -= 1
+                    else:
+                        pass
+                    n+=1
                 rain_point = randrange(60)
                 print(rain_point) #debug
                 if rain[rain_point] == 0:
@@ -97,12 +104,20 @@ def animation_choice(number):
                 print(rain) #-debug- check to see how random rain points get assigned
                 #put line to print to emulator
                 n=0
-                for pixel in rain[0:60]:
+                for pixel in rain:
                     if pixel > 0:
-                        rain[n] -= 1
+                        led_colour[n] = (255,0,0)
                     else:
-                        pass
+                        led_colour[n] = (0,0,0)
                     n+=1
+                print(led_colour)
+                print("--------------")
+                client.put_pixels(led_colour)
+                n=299
+                for pixel in reversed(rain[0:300]):
+                    rain[n+60]=rain[n]
+                    n-=1    
+                
 
 
         case 4:
