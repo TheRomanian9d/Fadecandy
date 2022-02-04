@@ -79,44 +79,34 @@ def animation_choice(number):
             else:
                 print("Name is too long")
         case 3:
-            rain = [0]*360
-            print(rain) #debug
+            rain = [0]*360 #list of where o droplet can be
             while True:
                 n=0
-                for pixel in rain[0:60]:
+                for pixel in rain[0:60]: #decrease the count on each pixel on the first line every iteration
                     if pixel > 0:
                         rain[n] -= 1
                     else:
                         pass
                     n+=1
-                rain_point = randrange(60)
-                print(rain_point) #debug
+                rain_point = randrange(60) #get a randon point on the first line when a drop can emerge
                 if rain[rain_point] == 0:
-                    drop = randrange(3,6)
-                    print(drop) #debug
+                    drop = randrange(3,6) #get a random length for each droplet
                     rain[rain_point] = drop
-                #to do: print to led and do a loop where 1 is taken away from each value that is not 0
                 else:
                     pass
-                #to do: shift leds down
-                #to do: print to led and do a loop where 1 is taken away from each value that is not 0
                 time.sleep(1)
-                print(rain) #-debug- check to see how random rain points get assigned
-                #put line to print to emulator
                 n=0
-                for pixel in rain:
+                for pixel in rain: #assign colour to each pixel according to values in rain
                     if pixel > 0:
                         led_colour[n] = (255,0,0)
                     else:
                         led_colour[n] = (0,0,0)
                     n+=1
-                print(led_colour)
-                print("--------------")
-                client.put_pixels(led_colour)
+                client.put_pixels(led_colour) #print pixels to emulator
                 n=299
-                for pixel in reversed(rain[0:300]):
+                for pixel in rain[300::-1]: #copy each drop of rain to the next line
                     rain[n+60]=rain[n]
-                    n-=1    
+                    n-=1
                 
 
 
@@ -127,5 +117,5 @@ def animation_choice(number):
         case _:
             print("Option not recognised")
 
-choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n\ntype number:"))
+choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:"))
 animation_choice(choice)
