@@ -5,12 +5,10 @@ import time
 from letters import *
 import colorsys
 from random import randrange
+from tkinter import *
 
-client = opc.Client('localhost:7890') #connects code to LED emulator
-
-led_colour=[(0,0,0)]*360 #sets a blank screen
-s = 1.0 #used to set maximum colour to hsv chart
-v = 1.0 #used to set maximum brightness to hsv chart
+def click():
+    entered_text = textentry.get()
 
 def print_letters(text): #function to print input letters to the LED emulator
     global led_colour
@@ -117,5 +115,18 @@ def animation_choice(number):
         case _:
             print("Option not recognised")
 
-choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:"))
-animation_choice(choice)
+client = opc.Client('localhost:7890') #connects code to LED emulator
+window = Tk()
+window.title("LED animations")
+window.configure(background = "black")
+Label (window, text = "Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
+textentry = Entry(window, width = 5, bg = "grey")
+textentry.grid(row = 1, column = 0, sticky = W)
+Button(window, text = "SUBMIT", width = 6, command = click) .grid(row = 2, column = 0, sticky = W)
+led_colour=[(0,0,0)]*360 #sets a blank screen
+s = 1.0 #used to set maximum colour to hsv chart
+v = 1.0 #used to set maximum brightness to hsv chart
+
+#choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:"))
+animation_choice(textentry)
+window.mainloop()
