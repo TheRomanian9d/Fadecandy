@@ -7,8 +7,8 @@ import colorsys
 from random import randrange
 from tkinter import *
 
-def click():
-    entered_text = textentry.get()
+def click(number):
+    animation_choice(number)
 
 def print_letters(text): #function to print input letters to the LED emulator
     global led_colour
@@ -119,14 +119,17 @@ client = opc.Client('localhost:7890') #connects code to LED emulator
 window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
-Label (window, text = "Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
-textentry = Entry(window, width = 5, bg = "grey")
-textentry.grid(row = 1, column = 0, sticky = W)
-Button(window, text = "SUBMIT", width = 6, command = click) .grid(row = 2, column = 0, sticky = W)
+Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
+#textentry = Entry(window, width = 5, bg = "grey")
+#textentry.grid(row = 1, column = 0, sticky = W)
+Button(window, text = "1. Author's intro", width = 17, command = lambda: click(1)) .grid(row = 1, column = 0, sticky = W)
+Button(window, text = "2. Print your name", width = 18, command = lambda: click(2)) .grid(row = 2, column = 0, sticky = W)
+Button(window, text = "3. Rain effect", width = 14, command = lambda: click(3)) .grid(row = 3, column = 0, sticky = W)
+Button(window, text = "4. Car game", width = 11, command = lambda: click(4)) .grid(row = 4, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 s = 1.0 #used to set maximum colour to hsv chart
 v = 1.0 #used to set maximum brightness to hsv chart
 
 #choice = int(input("Which animation would you like to see?\n1. Author's intro\n2. Print your name\n3. Rain effect\n4. Car game\n\ntype number:"))
-animation_choice(textentry)
+
 window.mainloop()
