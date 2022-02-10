@@ -8,12 +8,41 @@ from random import randrange
 from tkinter import *
 import threading
 
+class Animation_1:
+    """docstring for animation_1"""
+    def __init__(self):
+        self._running = True
+    def terminate(self):
+        self._running = False
+    def run(self):
+        while self._running:
+            if not self._running: break
+            print_letters([g,r,a])
+            if not self._running: break
+            time.sleep(1)
+            if not self._running: break
+            print_letters([i,x])
+            if not self._running: break
+            time.sleep(1)
+            if not self._running: break
+            print_letters([p,e,w,space,p,e,w])
+            if not self._running: break
+            time.sleep(1)
+            if not self._running: break
+            #creates a moving underline animation
+            draw_undreline((255,0,0),0.1)
+
+animation_1 = Animation_1()
+        
+
 def click(number):
     animation_choice(number)
 
 def stop_animation():
-    global running
-    running = False
+    animation_1.terminate()
+    print('uga uga')
+
+
 
 def print_letters(text): #function to print input letters to the LED emulator
     global led_colour
@@ -21,7 +50,7 @@ def print_letters(text): #function to print input letters to the LED emulator
     n=round(29 - (len(text)*7-8)/2) #used to center the letters on the emulator
     for value in text:
         for point in value:
-            
+
             pixel = 60*point[0] + point[1] + n
 
             r = 255
@@ -48,14 +77,9 @@ def draw_undreline(colour,sleep_time): #function to draw an underline on the bot
 def animation_choice(number):
     match number:
         case 1: #atuhor introduction
-            print_letters([g,r,a])
-            time.sleep(1)
-            print_letters([i,x])
-            time.sleep(1)
-            print_letters([p,e,w,space,p,e,w])
-            time.sleep(1)
-            #creates a moving underline animation
-            draw_undreline((255,0,0),0.1)
+            print("uga buga")
+            animation_1.run()
+
 
         case 2: #prints user's name
             name = input("What is your name?\n")
@@ -81,6 +105,7 @@ def animation_choice(number):
                     time.sleep(0.03) #set speed of hue transition
             else:
                 print("Name is too long")
+
         case 3:
             rain = [0]*360 #list of where o droplet can be
             while True:
@@ -88,15 +113,11 @@ def animation_choice(number):
                 for pixel in rain[0:60]: #decrease the count on each pixel on the first line every iteration
                     if pixel > 0:
                         rain[n] -= 1
-                    else:
-                        pass
                     n+=1
                 rain_point = randrange(60) #get a randon point on the first line when a drop can emerge
                 if rain[rain_point] == 0:
                     drop = randrange(3,6) #get a random length for each droplet
                     rain[rain_point] = drop
-                else:
-                    pass
                 time.sleep(1)
                 n=0
                 for pixel in rain: #assign colour to each pixel according to values in rain
@@ -111,8 +132,6 @@ def animation_choice(number):
                     rain[n+60]=rain[n]
                     n-=1
                 
-
-
         case 4:
             return
         case 5:
@@ -121,20 +140,18 @@ def animation_choice(number):
             print("Option not recognised")
 
 client = opc.Client('localhost:7890') #connects code to LED emulator
-running = False
 window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
 Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
-button1 = Button(window, text = "1. Author's intro", width = 18, command = threading.Thread(target = lambda: click(1)).start)
-button1.grid(row = 1, column = 0, sticky = W)
-button2 = Button(window, text = "2. Print your name", width = 18, command = threading.Thread(target = lambda: click(2)).start)
-button2.grid(row = 2, column = 0, sticky = W)
-button3 = Button(window, text = "3. Rain effect", width = 18, command = threading.Thread(target = lambda: click(3)).start)
-button3.grid(row = 3, column = 0, sticky = W)
-button4 = Button(window, text = "4. Car game", width = 18, command = threading.Thread(target = lambda: click(4)).start)
-button4.grid(row = 4, column = 0, sticky = W)
-button5 = Button(window, text = "Stop animation", width = 18, command = threading.Thread(target = stop_animation()).start)
+Button(window, text = "1. Author's intro", width = 18, command = threading.Thread(target = lambda: click(1)).start) .grid(row = 1, column = 0, sticky = W)
+#button2 = Button(window, text = "2. Print your name", width = 18, command = threading.Thread(target = lambda: click(2)).start)
+#button2.grid(row = 2, column = 0, sticky = W)
+#button3 = Button(window, text = "3. Rain effect", width = 18, command = threading.Thread(target = lambda: click(3)).start)
+#button3.grid(row = 3, column = 0, sticky = W)
+#button4 = Button(window, text = "4. Car game", width = 18, command = threading.Thread(target = lambda: click(4)).start)
+#button4.grid(row = 4, column = 0, sticky = W)
+button5 = Button(window, text = "Stop animation", width = 18, command = threading.Thread(target = lambda: stop_animation()).start)
 button5.grid(row = 5, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 s = 1.0 #used to set maximum colour to hsv chart
