@@ -55,12 +55,7 @@ class Animation_2(StartStopAnimation):
                 time.sleep(1)
                 draw_undreline((255,0,0),0.1)
                 for hue in range(360): #convert rgb to hsv
-                    rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, s, v) #get float between 1 and 0
-                    #assign floats to rgb variants
-                    r_float = rgb_fractional[0]
-                    g_float = rgb_fractional[1]
-                    b_float = rgb_fractional[2]
-                    rgb = (r_float*255, g_float*255, b_float*255) #get tupple with real rgb vlues from variants
+                    rgb = hsv_convert(hue)
                     print(rgb) #debug
                     draw_undreline(rgb,0) #set colour to underline
                     if not self._running: break
@@ -99,14 +94,17 @@ class Animation_3(StartStopAnimation):
 class Animation_4(StartStopAnimation):
     """docstring for Animation_4"""
     def run(self):
-        data=[]
+        led_colour=[(0,0,0)]*360
         while self._running:
             b = arduino.readline()
             string_n = b.decode()
             string = string_n.rstrip()
-            flt = float(string)
-            print(flt)#debug
-            data.append(flt)
+            hue = float(string)
+            print(hue)#debug
+            rgb = hsv_convert(hue)
+            for point in range(360):
+                led_colour[point] = rgb
+            client.put_pixels(led_colour) #print pixels to emulator
         arduino.close()
         
     
@@ -127,6 +125,14 @@ def stop_animation():
     animation_2.terminate()
     animation_3.terminate()
     animation_4.terminate()
+
+def hsv_convert(hue):
+    rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, s, v) #get float between 1 and 0
+    #assign floats to rgb variants
+    r_float = rgb_fractional[0]
+    g_float = rgb_fractional[1]
+    b_float = rgb_fractional[2]
+    return (r_float*255, g_float*255, b_float*255) #get tupple with real rgb vlues from variants
 
 def print_letters(text): #function to print input letters to the LED emulator
     global led_colour
