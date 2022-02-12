@@ -7,6 +7,9 @@ import colorsys
 from random import randrange
 from tkinter import *
 import threading
+import serial
+
+arduino = serial.Serial('COM3', 9600)
 
 class StartStopAnimation:
     """docstring for animation_1"""
@@ -92,21 +95,38 @@ class Animation_3(StartStopAnimation):
             for pixel in rain[300::-1]: #copy each drop of rain to the next line
                 rain[n+60]=rain[n]
                 n-=1
+
+class Animation_4(StartStopAnimation):
+    """docstring for Animation_4"""
+    def run(self):
+        data=[]
+        while self._running:
+            b = arduino.readline()
+            string_n = b.decode()
+            string = string_n.rstrip()
+            flt = float(string)
+            print(flt)#debug
+            data.append(flt)
+        arduino.close()
+        
     
 animation_1 = Animation_1()
 animation_2 = Animation_2()
-animation_3 = Animation_3()   
+animation_3 = Animation_3()
+animation_4 = Animation_4()  
 
 def click(number):
     animation_1.on()
     animation_2.on()
     animation_3.on()
+    animation_4.on()
     animation_choice(number)
 
 def stop_animation():
     animation_1.terminate()
     animation_2.terminate()
     animation_3.terminate()
+    animation_4.terminate()
 
 def print_letters(text): #function to print input letters to the LED emulator
     global led_colour
@@ -148,7 +168,8 @@ def animation_choice(number):
             animation_3.run()
                 
         case 4:
-            return
+            animation_4.run()
+
         case 5:
             return
         case _:
@@ -164,8 +185,8 @@ button2 = Button(window, text = "2. Print your name", width = 18, command = thre
 button2.grid(row = 2, column = 0, sticky = W)
 button3 = Button(window, text = "3. Rain effect", width = 18, command = threading.Thread(target = lambda: click(3)).start)
 button3.grid(row = 3, column = 0, sticky = W)
-#button4 = Button(window, text = "4. Car game", width = 18, command = threading.Thread(target = lambda: click(4)).start)
-#button4.grid(row = 4, column = 0, sticky = W)
+button4 = Button(window, text = "4. Car game", width = 18, command = threading.Thread(target = lambda: click(4)).start)
+button4.grid(row = 4, column = 0, sticky = W)
 button5 = Button(window, text = "Stop animation", width = 18, command = threading.Thread(target = lambda: stop_animation()).start)
 button5.grid(row = 5, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
