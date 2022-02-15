@@ -168,9 +168,11 @@ def start_new_thread(func, *args):
     global nthrd
     print (nthrd)
     if not args:
+        print('if')
         globals()['%sthrd' % nthrd] = threading.Thread(target = func).start()
     else:
-        globals()['%sthrd' % nthrd] = threading.Thread(target = func(args[0])).start()
+        print('else')
+        globals()['%sthrd' % nthrd] = threading.Thread(target = lambda: func(args[0])).start()
     nthrd += 1
     print (nthrd)
 
@@ -199,12 +201,12 @@ window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
 Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
-Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click(1))) .grid(row = 1, column = 0, sticky = W)
-button2 = Button(window, text = "2. Print your name", width = 30, command = threading.Thread(target = lambda: click(2)).start)
+Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click,1)) .grid(row = 1, column = 0, sticky = W)
+button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(click,2))
 button2.grid(row = 2, column = 0, sticky = W)
-button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click(3)))
+button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click,3))
 button3.grid(row = 3, column = 0, sticky = W)
-button4 = Button(window, text = "4. Potentiometer hue control", width = 30, command = lambda: start_new_thread(click(4)))
+button4 = Button(window, text = "4. Potentiometer hue control", width = 30, command = lambda: start_new_thread(click,4))
 button4.grid(row = 4, column = 0, sticky = W)
 button5 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
 button5.grid(row = 5, column = 0, sticky = W)
