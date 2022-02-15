@@ -9,7 +9,8 @@ from tkinter import *
 import threading
 import serial
 
-arduino = serial.Serial('COM3', 9600)
+#arduino = serial.Serial('COM3', 9600)
+#arduino.timeout = 0.1
 
 class StartStopAnimation:
     """docstring for animation_1"""
@@ -105,8 +106,7 @@ class Animation_4(StartStopAnimation):
             for point in range(360):
                 led_colour[point] = rgb
             client.put_pixels(led_colour) #print pixels to emulator
-        arduino.close()
-        
+        arduino.close()       
     
 animation_1 = Animation_1()
 animation_2 = Animation_2()
@@ -162,6 +162,19 @@ def draw_undreline(colour,sleep_time): #function to draw an underline on the bot
         time.sleep(sleep_time)
         led +=1 #increase pixel number
 
+nthrd = 0
+
+def start_new_thread(func, *args):
+    global nthrd
+    print (nthrd)
+    if not args:
+        globals()['%sthrd' % nthrd] = threading.Thread(target = func).start()
+    else:
+        globals()['%sthrd' % nthrd] = threading.Thread(target = func(args[0])).start()
+    nthrd += 1
+    print (nthrd)
+
+
 def animation_choice(number):
     match number:
         case 1: #atuhor introduction
@@ -173,7 +186,7 @@ def animation_choice(number):
         case 3: #creates a rain effect
             animation_3.run()
                 
-        case 4:
+        case 4: #arduino potentiometer controld led hue
             animation_4.run()
 
         case 5:
@@ -186,14 +199,14 @@ window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
 Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
-Button(window, text = "1. Author's intro", width = 18, command = threading.Thread(target = lambda: click(1)).start) .grid(row = 1, column = 0, sticky = W)
-button2 = Button(window, text = "2. Print your name", width = 18, command = threading.Thread(target = lambda: click(2)).start)
+Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click(1))) .grid(row = 1, column = 0, sticky = W)
+button2 = Button(window, text = "2. Print your name", width = 30, command = threading.Thread(target = lambda: click(2)).start)
 button2.grid(row = 2, column = 0, sticky = W)
-button3 = Button(window, text = "3. Rain effect", width = 18, command = threading.Thread(target = lambda: click(3)).start)
+button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click(3)))
 button3.grid(row = 3, column = 0, sticky = W)
-button4 = Button(window, text = "4. Car game", width = 18, command = threading.Thread(target = lambda: click(4)).start)
+button4 = Button(window, text = "4. Potentiometer hue control", width = 30, command = lambda: start_new_thread(click(4)))
 button4.grid(row = 4, column = 0, sticky = W)
-button5 = Button(window, text = "Stop animation", width = 18, command = threading.Thread(target = lambda: stop_animation()).start)
+button5 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
 button5.grid(row = 5, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 s = 1.0 #used to set maximum colour to hsv chart

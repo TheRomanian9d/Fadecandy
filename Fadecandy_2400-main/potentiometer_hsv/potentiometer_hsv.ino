@@ -1,6 +1,6 @@
 int sensorPin = A0;
 int sensorValue;
-int hvg;
+int hsg;
 
 void setup() {
   // put your setup code here, to run once:
@@ -10,7 +10,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   sensorValue = analogRead(sensorPin);
-  hvg = map(sensorValue, 0, 1023, 0, 359);
-  Serial.println(hvg);
+  hsg = map(sensorValue, 0, 1023, 0, 359);
+  Serial.println(hsg);
   
 }
