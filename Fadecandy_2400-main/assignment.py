@@ -106,18 +106,32 @@ class Animation_4(StartStopAnimation):
             for point in range(360):
                 led_colour[point] = rgb
             client.put_pixels(led_colour) #print pixels to emulator
-        arduino.close()       
+        arduino.close()
+
+class Animation_5(StartStopAnimation):
+          """docstring for Animation_5"""
+          def run(self):
+            user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
+            def generate_bot_car():
+                n = randrange(4)
+                bot_car = [(n,3), (n,2), (n,1), (n+1,3), (n+1,2), (n+1,1)]
+            count = 0
+            while self._running:
+                for p in user_car:
+                    led_colour[p[0]*60+p[1]] = (0,0,255)
     
 animation_1 = Animation_1()
 animation_2 = Animation_2()
 animation_3 = Animation_3()
-animation_4 = Animation_4()  
+animation_4 = Animation_4()
+animation_5 = Animation_5()
 
 def click(number):
     animation_1.on()
     animation_2.on()
     animation_3.on()
     animation_4.on()
+    animation_5.on()
     animation_choice(number)
 
 def stop_animation():
@@ -125,6 +139,7 @@ def stop_animation():
     animation_2.terminate()
     animation_3.terminate()
     animation_4.terminate()
+    animation_5.terminate()
 
 def hsv_convert(hue):
     rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, s, v) #get float between 1 and 0
@@ -192,7 +207,7 @@ def animation_choice(number):
             animation_4.run()
 
         case 5:
-            return
+            animation_5.run()
         case _:
             print("Option not recognised")
 
@@ -201,15 +216,18 @@ window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
 Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
-Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click,1)) .grid(row = 1, column = 0, sticky = W)
+button1 = Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click,1)) 
+button1.grid(row = 1, column = 0, sticky = W)
 button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(click,2))
 button2.grid(row = 2, column = 0, sticky = W)
 button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click,3))
 button3.grid(row = 3, column = 0, sticky = W)
 button4 = Button(window, text = "4. Potentiometer hue control", width = 30, command = lambda: start_new_thread(click,4))
 button4.grid(row = 4, column = 0, sticky = W)
-button5 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
+button5 = Button(window, text = "5. Car game", width = 30, command = lambda: start_new_thread(click,5))
 button5.grid(row = 5, column = 0, sticky = W)
+button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
+button6.grid(row = 5, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 s = 1.0 #used to set maximum colour to hsv chart
 v = 1.0 #used to set maximum brightness to hsv chart
