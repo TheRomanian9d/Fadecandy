@@ -9,6 +9,9 @@ from tkinter import *
 import threading
 import serial
 
+#arduino = serial.Serial('COM3', 9600)
+#arduino.timeout = 0.1
+
 class StartStopAnimation:
     """docstring for animation_1"""
     def __init__(self):
@@ -92,8 +95,6 @@ class Animation_3(StartStopAnimation):
 class Animation_4(StartStopAnimation):
     """docstring for Animation_4"""
     def run(self):
-        arduino = serial.Serial('COM3', 9600)
-        arduino.timeout = 0.1
         led_colour=[(0,0,0)]*360
         while self._running:
             b = arduino.readline()
@@ -108,41 +109,17 @@ class Animation_4(StartStopAnimation):
         arduino.close()
 
 class Animation_5(StartStopAnimation):
-    """docstring for Animation_5"""
-    def run(self):
-        led_colour=[(0,0,0)]*360
-        user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
-        count = 0
-        bot_car_count = 0
-        bot_cars = []
-        s_count = 100
-        while self._running:
-            for p in user_car:
-                position = p[0]*60+p[1]
-                print(position)
-                led_colour[position] = (0,0,255)
-            if bot_car_count % 7 == 0:
-                bot_cars.append(generate_bot_car)
-            for car in bot_cars:
-                for p in car:
-                    position = p[0]*60+p[1]
-            client.put_pixels(led_colour)
-            if s_count % 100 == 0:
-                for car in bot_cars:
-                    if car[0][1] < 59:
-                        for p in car:
-                            p = (p[0]+1,p[1]+1)
-                    else:
-                        bot_cars.remove(car)
-            bot_car_count += 0.01
-            if count % 5000 == 0: s_count -= 20 #decrease time it takes for bot cars to move every 50 sec
-            count +=1
-            time.sleep(0.01) #response time to check for any imput
-
-
-            #make loop time 0.1 or 0.01 sec and make cars more every 10 or 100 loops
-
-#assign animation objects to variables    
+          """docstring for Animation_5"""
+          def run(self):
+            user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
+            def generate_bot_car():
+                n = randrange(4)
+                bot_car = [(n,3), (n,2), (n,1), (n+1,3), (n+1,2), (n+1,1)]
+            count = 0
+            while self._running:
+                for p in user_car:
+                    led_colour[p[0]*60+p[1]] = (0,0,255)
+    
 animation_1 = Animation_1()
 animation_2 = Animation_2()
 animation_3 = Animation_3()
@@ -163,11 +140,6 @@ def stop_animation():
     animation_3.terminate()
     animation_4.terminate()
     animation_5.terminate()
-
-def generate_bot_car():
-    n = randrange(4)
-    bot_car = [(n,3), (n,2), (n,1), (n+1,3), (n+1,2), (n+1,1)]
-    return bot_car
 
 def hsv_convert(hue):
     rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, s, v) #get float between 1 and 0
@@ -255,7 +227,7 @@ button4.grid(row = 4, column = 0, sticky = W)
 button5 = Button(window, text = "5. Car game", width = 30, command = lambda: start_new_thread(click,5))
 button5.grid(row = 5, column = 0, sticky = W)
 button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
-button6.grid(row = 6, column = 0, sticky = W)
+button6.grid(row = 5, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 s = 1.0 #used to set maximum colour to hsv chart
 v = 1.0 #used to set maximum brightness to hsv chart
