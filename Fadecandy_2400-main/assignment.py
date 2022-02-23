@@ -8,6 +8,7 @@ from random import randrange
 from tkinter import *
 import threading
 import serial
+import math
 
 class StartStopAnimation:
     """docstring for animation_1"""
@@ -21,15 +22,15 @@ class StartStopAnimation:
 class Animation_1(StartStopAnimation):
     def run(self):
         while self._running:
-            print_letters([g,r,a])
+            print_letters([g,r,a],255,0,0)
             if not self._running: break
             time.sleep(1)
             if not self._running: break
-            print_letters([i,x])
+            print_letters([i,x],255,0,0)
             if not self._running: break
             time.sleep(1)
             if not self._running: break
-            print_letters([p,e,w,space,p,e,w])
+            print_letters([p,e,w,space,p,e,w],255,0,0)
             if not self._running: break
             time.sleep(1)
             if not self._running: break
@@ -48,16 +49,17 @@ class Animation_2(StartStopAnimation):
                         chars.append(globals()[letter]) #set list with characters from input
                     else:
                         print("Name contains unrecognised characters")
-                print_letters(chars)
+                print_letters(chars,255,255,255)
                 if not self._running: break
-                time.sleep(1)
-                draw_undreline((255,0,0),0.1)
-                for hue in range(360): #convert rgb to hsv
-                    rgb = hsv_convert(hue)
+                time.sleep(0.5)
+                draw_undreline((255,255,255),0.1)
+                for x in range(360): #convert rgb to hsv
+                    rgb = hsv_convert(x)
                     print(rgb) #debug
                     draw_undreline(rgb,0) #set colour to underline
                     if not self._running: break
-                    time.sleep(0.03) #set speed of hue transition
+                    time.sleep(0.1)
+                break
             else:
                 print("Name is too long")
 
@@ -110,32 +112,38 @@ class Animation_4(StartStopAnimation):
 class Animation_5(StartStopAnimation):
     """docstring for Animation_5"""
     def run(self):
-        led_colour=[(0,0,0)]*360
         user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
-        count = 0
+        count = 1
         bot_car_count = 0
         bot_cars = []
         s_count = 100
+        speed = 5
         while self._running:
-            for p in user_car:
-                position = p[0]*60+p[1]
-                print(position)
-                led_colour[position] = (0,0,255)
-            if bot_car_count % 7 == 0:
-                bot_cars.append(generate_bot_car)
-            for car in bot_cars:
-                for p in car:
-                    position = p[0]*60+p[1]
             client.put_pixels(led_colour)
-            if s_count % 100 == 0:
-                for car in bot_cars:
-                    if car[0][1] < 59:
-                        for p in car:
-                            p = (p[0]+1,p[1]+1)
+            for p in user_car:
+                print(p)
+                position = p[0]*60+p[1]
+                led_colour[position] = (0,0,255)
+            if bot_car_count % 800 == 0:
+                bot_cars.append(generate_bot_car())
+            print(bot_car_count)
+            print(bot_cars)
+            for car in bot_cars:
+                for z in car:
+                    position = z[0]*60+z[1]
+                    led_colour[position - 1] = (0,0,0)
+                    led_colour[position] = (255,0,0)
+            client.put_pixels(led_colour)
+            if bot_car_count % 100 == 0:
+                for car in enumerate(bot_cars):
+                    if car[1][0][1] < 59:
+                        for c in enumerate(car[1]):
+                            bot_cars[car[0]][c[0]] = (c[1][0],c[1][1]+1)
                     else:
-                        bot_cars.remove(car)    
-            bot_car_count += 0.01
-            if count % 5000 == 0: s_count -= 20 #decrease time it takes for bot cars to move every 50 sec
+                        bot_cars.remove(car)
+            
+            bot_car_count += speed
+            if count % 5000 == 0: speed += 5 #decrease time it takes for bot cars to move every 50 sec
             count +=1
             time.sleep(0.01) #response time to check for any imput
 
@@ -170,14 +178,14 @@ def generate_bot_car():
     return bot_car
 
 def hsv_convert(hue):
-    rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, s, v) #get float between 1 and 0
+    rgb_fractional = colorsys.hsv_to_rgb(hue/360.0, _s, _v) #get float between 1 and 0
     #assign floats to rgb variants
     r_float = rgb_fractional[0]
     g_float = rgb_fractional[1]
     b_float = rgb_fractional[2]
     return (r_float*255, g_float*255, b_float*255) #get tupple with real rgb vlues from variants
 
-def print_letters(text): #function to print input letters to the LED emulator
+def print_letters(text,r,g,b): #function to print input letters to the LED emulator
     global led_colour
     led_colour=[(0,0,0)]*360 #refreshes to black screen every time function is called
     n=round(29 - (len(text)*7-8)/2) #used to center the letters on the emulator
@@ -185,10 +193,9 @@ def print_letters(text): #function to print input letters to the LED emulator
         for point in value:
 
             pixel = 60*point[0] + point[1] + n
-
-            r = 255
-            g = 0
-            b = 0
+            r = r
+            g = g
+            b = b
 
             new_colour = (r,g,b)
             led_colour[pixel] = new_colour
@@ -201,8 +208,12 @@ def draw_undreline(colour,sleep_time): #function to draw an underline on the bot
     led = 60*5 #used to ignore the first 5 lines
     while led < 60*6:
         led_colour[led] = colour #each pixel in line 6 is chosen
+        print(led)
         client.put_pixels(led_colour) #colour is sent to the pixel
-        time.sleep(sleep_time)
+        if sleep_time > 0: 
+            time.sleep(sleep_time)
+        else:
+            pass
         led +=1 #increase pixel number
 
 nthrd = 0
@@ -257,7 +268,7 @@ button5.grid(row = 5, column = 0, sticky = W)
 button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
 button6.grid(row = 6, column = 0, sticky = W)
 led_colour=[(0,0,0)]*360 #sets a blank screen
-s = 1.0 #used to set maximum colour to hsv chart
-v = 1.0 #used to set maximum brightness to hsv chart
+_s = 1.0 #used to set maximum colour to hsv chart
+_v = 1.0 #used to set maximum brightness to hsv chart
 
 window.mainloop()
