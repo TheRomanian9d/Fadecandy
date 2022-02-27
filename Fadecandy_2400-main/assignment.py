@@ -41,7 +41,7 @@ class Animation_2(StartStopAnimation):
     """docstring for Animation_2"""
     def run(self):
         while self._running:
-            name = input("What is your name?\n")
+            name = input_text.get(1.0, "end-1c").lower()
             if len(name) < 10: #check to see if name is too long
                 chars = []
                 for letter in name:
@@ -49,6 +49,9 @@ class Animation_2(StartStopAnimation):
                         chars.append(globals()[letter]) #set list with characters from input
                     else:
                         print("Name contains unrecognised characters")
+                for n in range(5):
+                    print_letters([h,e,l,l,o],randrange(255),randrange(255),randrange(255))
+                    time.sleep(0.5)
                 print_letters(chars,255,255,255)
                 if not self._running: break
                 time.sleep(0.5)
@@ -174,9 +177,11 @@ def pop_up():
     pop.config(bg = "black")
     pop_label = Label(pop, text = "Please enter your name", bg = "black", fg = "white")
     pop_label.pack(pady = 10)
+    global input_text
     input_text = Text(pop, height = 1, width = 20)
     input_text.pack(pady = 10)
-
+    pop_button = Button(pop, text = "SUBMIT", width = 10, command = lambda: start_new_thread(click,2))
+    pop_button.pack(pady = 10)
 
 def stop_animation():
     animation_1.terminate()
