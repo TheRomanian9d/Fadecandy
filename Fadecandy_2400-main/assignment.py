@@ -81,7 +81,7 @@ class Animation_3(StartStopAnimation):
             n=0
             for pixel in rain: #assign colour to each pixel according to values in rain
                 if pixel > 0:
-                    led_colour[n] = (255,0,0)
+                    led_colour[n] = (0,0,255)
                 else:
                     led_colour[n] = (0,0,0)
                 n+=1
@@ -112,6 +112,7 @@ class Animation_4(StartStopAnimation):
 class Animation_5(StartStopAnimation):
     """docstring for Animation_5"""
     def run(self):
+        led_colour=[(0,0,0)]*360
         user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
         count = 1
         bot_car_count = 0
@@ -164,6 +165,18 @@ def click(number):
     animation_4.on()
     animation_5.on()
     animation_choice(number)
+
+def pop_up():
+    global pop
+    pop = Toplevel(window)
+    pop.title("Enter name")
+    pop.geometry("250x150")
+    pop.config(bg = "black")
+    pop_label = Label(pop, text = "Please enter your name", bg = "black", fg = "white")
+    pop_label.pack(pady = 10)
+    input_text = Text(pop, height = 1, width = 20)
+    input_text.pack(pady = 10)
+
 
 def stop_animation():
     animation_1.terminate()
@@ -254,19 +267,20 @@ client = opc.Client('localhost:7890') #connects code to LED emulator
 window = Tk()
 window.title("LED animations")
 window.configure(background = "black")
-Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .grid(row = 0, column = 0, sticky = W)
+Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .pack(pady = 5)
 button1 = Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click,1)) 
-button1.grid(row = 1, column = 0, sticky = W)
-button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(click,2))
-button2.grid(row = 2, column = 0, sticky = W)
+button1.pack(pady = 5)
+button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(pop_up()))
+#button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(click,2))
+button2.pack(pady = 5)
 button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click,3))
-button3.grid(row = 3, column = 0, sticky = W)
+button3.pack(pady = 5)
 button4 = Button(window, text = "4. Potentiometer hue control", width = 30, command = lambda: start_new_thread(click,4))
-button4.grid(row = 4, column = 0, sticky = W)
+button4.pack(pady = 5)
 button5 = Button(window, text = "5. Car game", width = 30, command = lambda: start_new_thread(click,5))
-button5.grid(row = 5, column = 0, sticky = W)
+button5.pack(pady = 5)
 button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
-button6.grid(row = 6, column = 0, sticky = W)
+button6.pack(pady = 5)
 led_colour=[(0,0,0)]*360 #sets a blank screen
 _s = 1.0 #used to set maximum colour to hsv chart
 _v = 1.0 #used to set maximum brightness to hsv chart
