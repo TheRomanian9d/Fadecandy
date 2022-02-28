@@ -142,10 +142,23 @@ class Animation_5(StartStopAnimation):
                 for car in enumerate(bot_cars):
                     if car[1][0][1] < 59:
                         for c in enumerate(car[1]):
-                            bot_cars[car[0]][c[0]] = (c[1][0],c[1][1]+1)
+                            if c[1] in user_car:
+                                while True:
+                                    for x in range(360):
+                                        rgb = hsv_convert(x)
+                                        client.put_pixels([rgb]*360)
+                                        if not self._running: break
+                                        time.sleep(0.01)
+                                    print_letters([g,a,m,e],52,235,55)
+                                    if not self._running: break
+                                    time.sleep(1)
+                                    print_letters([o,v,e,r],155,52,235)
+                                    if not self._running: break
+                                    time.sleep(1)
+                            else:
+                                bot_cars[car[0]][c[0]] = (c[1][0],c[1][1]+1)
                     else:
                         bot_cars.remove(car[1])
-            
             bot_car_count += speed
             if count % 5000 == 0: speed += 5 #decrease time it takes for bot cars to move every 50 sec
             count +=1
@@ -255,8 +268,6 @@ def draw_undreline(colour,sleep_time): #function to draw an underline on the bot
             time.sleep(sleep_time)
         led +=1 #increase pixel number
 
-nthrd = 0
-
 def start_new_thread(func, *args):
     global nthrd
     if not args:
@@ -302,6 +313,7 @@ button5 = Button(window, text = "5. Car game", width = 30, command = lambda: sta
 button5.pack(pady = 5)
 button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
 button6.pack(pady = 5)
+nthrd = 0
 led_colour=[(0,0,0)]*360 #sets a blank screen
 _s = 1.0 #used to set maximum colour to hsv chart
 _v = 1.0 #used to set maximum brightness to hsv chart
