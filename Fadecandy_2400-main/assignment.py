@@ -143,7 +143,7 @@ class Animation_5(StartStopAnimation):
                         for c in enumerate(car[1]):
                             bot_cars[car[0]][c[0]] = (c[1][0],c[1][1]+1)
                     else:
-                        bot_cars.remove(car)
+                        bot_cars.remove(car[1])
             
             bot_car_count += speed
             if count % 5000 == 0: speed += 5 #decrease time it takes for bot cars to move every 50 sec
@@ -199,20 +199,24 @@ def check_input(event):
     print(event.char)
     global user_car
     global led_colour
-    if event.char == 'w':
-        for a in enumerate(user_car):
-            position = a[1][0]*60+a[1][1]
-            print(position)
-            led_colour[position] = (0,0,0)
-            client.put_pixels(led_colour)
-            user_car[a[0]] = (a[1][0] - 1, a[1][1])
-    elif event.char == 's':
-        for a in enumerate(user_car):
-            position = a[1][0]*60+a[1][1]
-            print(position)
-            led_colour[position] = (0,0,0)
-            client.put_pixels(led_colour)
-            user_car[a[0]] = (a[1][0] + 1, a[1][1])
+    if event.char.lower() == 'w':
+        if user_car[0][0] > 0:
+            for a in enumerate(user_car):
+                print(a[1][0])
+                #position = a[1][0]*60+a[1][1]
+                #print(position)
+                #led_colour[position] = (0,0,0)
+                #client.put_pixels(led_colour)
+                user_car[a[0]] = (a[1][0] - 1, a[1][1])
+    elif event.char.lower() == 's':
+        if user_car[0][0] < 4:
+            for a in enumerate(user_car):
+                print(a[1][0])
+                #position = a[1][0]*60+a[1][1]
+                #print(position)
+                #led_colour[position] = (0,0,0)
+                #client.put_pixels(led_colour)
+                user_car[a[0]] = (a[1][0] + 1, a[1][1])
     else:
         pass
 
