@@ -58,7 +58,7 @@ class Animation_2(StartStopAnimation):
                 draw_undreline((255,255,255),0.1)
                 for x in range(360): #convert rgb to hsv
                     rgb = hsv_convert(x)
-                    print(rgb) #debug
+                    #print(rgb) #debug
                     draw_undreline(rgb,0) #set colour to underline
                     if not self._running: break
                     time.sleep(0.1)
@@ -115,7 +115,9 @@ class Animation_4(StartStopAnimation):
 class Animation_5(StartStopAnimation):
     """docstring for Animation_5"""
     def run(self):
+        pop_up_game()
         led_colour=[(0,0,0)]*360
+        global user_car
         user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
         count = 1
         bot_car_count = 0
@@ -125,13 +127,10 @@ class Animation_5(StartStopAnimation):
         while self._running:
             client.put_pixels(led_colour)
             for p in user_car:
-                print(p)
                 position = p[0]*60+p[1]
                 led_colour[position] = (0,0,255)
             if bot_car_count % 800 == 0:
                 bot_cars.append(generate_bot_car())
-            print(bot_car_count)
-            print(bot_cars)
             for car in bot_cars:
                 for z in car:
                     position = z[0]*60+z[1]
@@ -169,7 +168,7 @@ def click(number):
     animation_5.on()
     animation_choice(number)
 
-def pop_up():
+def pop_up_name():
     global pop
     pop = Toplevel(window)
     pop.title("Enter name")
@@ -182,6 +181,40 @@ def pop_up():
     input_text.pack(pady = 10)
     pop_button = Button(pop, text = "SUBMIT", width = 10, command = lambda: start_new_thread(click,2))
     pop_button.pack(pady = 10)
+
+def pop_up_game():
+    global pop
+    pop = Toplevel(window)
+    pop.title("Enter command")
+    pop.geometry("250x150")
+    pop.config(bg = "black")
+    pop_label = Label(pop, text = "Enter command here:", bg = "black", fg = "white")
+    pop_label.pack(pady = 10)
+    input_command = Text(pop, height = 1, width = 20)
+    input_command.bind("<Key>", check_input)
+    input_command.pack(pady = 10)
+
+def check_input(event):
+    print("check")
+    print(event.char)
+    global user_car
+    global led_colour
+    if event.char == 'w':
+        for a in enumerate(user_car):
+            position = a[1][0]*60+a[1][1]
+            print(position)
+            led_colour[position] = (0,0,0)
+            client.put_pixels(led_colour)
+            user_car[a[0]] = (a[1][0] - 1, a[1][1])
+    elif event.char == 's':
+        for a in enumerate(user_car):
+            position = a[1][0]*60+a[1][1]
+            print(position)
+            led_colour[position] = (0,0,0)
+            client.put_pixels(led_colour)
+            user_car[a[0]] = (a[1][0] + 1, a[1][1])
+    else:
+        pass
 
 def stop_animation():
     animation_1.terminate()
@@ -226,12 +259,9 @@ def draw_undreline(colour,sleep_time): #function to draw an underline on the bot
     led = 60*5 #used to ignore the first 5 lines
     while led < 60*6:
         led_colour[led] = colour #each pixel in line 6 is chosen
-        print(led)
         client.put_pixels(led_colour) #colour is sent to the pixel
         if sleep_time > 0: 
             time.sleep(sleep_time)
-        else:
-            pass
         led +=1 #increase pixel number
 
 nthrd = 0
@@ -275,8 +305,7 @@ window.configure(background = "black")
 Label (window, text = "Which animation would you like to see?", bg = "black", fg = "white", font = "none 12") .pack(pady = 5)
 button1 = Button(window, text = "1. Author's intro", width = 30, command = lambda: start_new_thread(click,1)) 
 button1.pack(pady = 5)
-button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(pop_up()))
-#button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(click,2))
+button2 = Button(window, text = "2. Print your name", width = 30, command = lambda: start_new_thread(pop_up_name()))
 button2.pack(pady = 5)
 button3 = Button(window, text = "3. Rain effect", width = 30, command = lambda: start_new_thread(click,3))
 button3.pack(pady = 5)
