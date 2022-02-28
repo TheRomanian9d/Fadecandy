@@ -118,7 +118,7 @@ class Animation_5(StartStopAnimation):
         pop_up_game()
         led_colour=[(0,0,0)]*360
         global user_car
-        user_car = [(2,57), (2,58), (2,59), (3,57), (3,58), (3,59)]
+        user_car = [(2,47), (2,48), (2,49), (3,47), (3,48), (3,49)]
         count = 1
         bot_car_count = 0
         bot_cars = []
@@ -126,6 +126,7 @@ class Animation_5(StartStopAnimation):
         speed = 5
         while self._running:
             client.put_pixels(led_colour)
+            led_colour = 360 * [(0,0,0)]
             for p in user_car:
                 position = p[0]*60+p[1]
                 led_colour[position] = (0,0,255)
@@ -195,27 +196,13 @@ def pop_up_game():
     input_command.pack(pady = 10)
 
 def check_input(event):
-    print("check")
-    print(event.char)
-    global user_car
-    global led_colour
     if event.char.lower() == 'w':
         if user_car[0][0] > 0:
             for a in enumerate(user_car):
-                print(a[1][0])
-                #position = a[1][0]*60+a[1][1]
-                #print(position)
-                #led_colour[position] = (0,0,0)
-                #client.put_pixels(led_colour)
                 user_car[a[0]] = (a[1][0] - 1, a[1][1])
     elif event.char.lower() == 's':
         if user_car[0][0] < 4:
             for a in enumerate(user_car):
-                print(a[1][0])
-                #position = a[1][0]*60+a[1][1]
-                #print(position)
-                #led_colour[position] = (0,0,0)
-                #client.put_pixels(led_colour)
                 user_car[a[0]] = (a[1][0] + 1, a[1][1])
     else:
         pass
