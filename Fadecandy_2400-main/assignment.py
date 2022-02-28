@@ -127,9 +127,6 @@ class Animation_5(StartStopAnimation):
         while self._running:
             client.put_pixels(led_colour)
             led_colour = 360 * [(0,0,0)]
-            for p in user_car:
-                position = p[0]*60+p[1]
-                led_colour[position] = (0,0,255)
             if bot_car_count % 800 == 0:
                 bot_cars.append(generate_bot_car())
             for car in bot_cars:
@@ -137,6 +134,9 @@ class Animation_5(StartStopAnimation):
                     position = z[0]*60+z[1]
                     led_colour[position - 1] = (0,0,0)
                     led_colour[position] = (255,0,0)
+            for p in user_car:
+                position = p[0]*60+p[1]
+                led_colour[position] = (0,0,255)
             client.put_pixels(led_colour)
             if bot_car_count % 100 == 0:
                 for car in enumerate(bot_cars):
@@ -259,15 +259,11 @@ nthrd = 0
 
 def start_new_thread(func, *args):
     global nthrd
-    print (nthrd)
     if not args:
-        print('if')
         globals()['%sthrd' % nthrd] = threading.Thread(target = func).start()
     else:
-        print('else')
         globals()['%sthrd' % nthrd] = threading.Thread(target = lambda: func(args[0])).start()
     nthrd += 1
-    print (nthrd)
 
 
 def animation_choice(number):
