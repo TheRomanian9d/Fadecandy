@@ -6,6 +6,7 @@ from letters import *
 import colorsys
 from random import randrange
 from tkinter import *
+import tkinter.messagebox
 import threading
 import serial
 import math
@@ -58,9 +59,12 @@ class Animation_2(StartStopAnimation):
                     if letter.isalpha(): #check to see if only letters are inputted
                         chars.append(globals()[letter]) #set list with characters from input
                     else:
-                        print("Name contains unrecognised characters")
+                        tkinter.messagebox.showerror(title = "Error", message = "Name contains unrecognised characters")
+                        stop_animation()
+                        break
                 for n in range(5):
                     print_letters([h,e,l,l,o],randrange(255),randrange(255),randrange(255))
+                    if not self._running: break
                     time.sleep(0.5)
                 print_letters(chars,255,255,255)
                 if not self._running: break
@@ -74,7 +78,8 @@ class Animation_2(StartStopAnimation):
                     time.sleep(0.1)
                 break
             else:
-                print("Name is too long")
+                tkinter.messagebox.showerror(title = "Error", message = "Name is too long")
+                break
 
 class Animation_3(StartStopAnimation):
     """docstring for Animation_3"""
@@ -304,7 +309,7 @@ def animation_choice(number):
         case 5:
             animation_5.run()
         case _:
-            print("Option not recognised")
+            tkinter.messagebox.showerror(title = "Error", message = "Option not recognised")
 
 client = opc.Client('localhost:7890') #connects code to LED emulator
 window = Tk()
@@ -321,7 +326,7 @@ button4 = Button(window, text = "4. Potentiometer hue control", width = 30, comm
 button4.pack(pady = 5)
 button5 = Button(window, text = "5. Car game", width = 30, command = lambda: start_new_thread(click,5))
 button5.pack(pady = 5)
-button6 = Button(window, text = "Stop animation", width = 30, command = lambda: start_new_thread(stop_animation()))
+button6 = Button(window, text = "Stop animation", fg = "red", width = 35, command = lambda: start_new_thread(stop_animation()))
 button6.pack(pady = 5)
 nthrd = 0
 led_colour=[(0,0,0)]*360 #sets a blank screen
