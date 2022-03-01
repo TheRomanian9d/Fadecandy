@@ -22,16 +22,26 @@ class StartStopAnimation:
 class Animation_1(StartStopAnimation):
     def run(self):
         while self._running:
-            print_letters([g,r,a],255,0,0)
             if not self._running: break
+            print_letters([i],255,0,0)
+            time.sleep(1)
+            if not self._running: break
+            print_letters([a,m],255,0,0)
+            time.sleep(1)
+            if not self._running: break
+            print_letters([g,r,a],255,0,0)
+            time.sleep(1)
+            if not self._running: break
+            print_letters([a,k,a],255,0,0)
             time.sleep(1)
             if not self._running: break
             print_letters([i,x],255,0,0)
-            if not self._running: break
             time.sleep(1)
             if not self._running: break
             print_letters([p,e,w,space,p,e,w],255,0,0)
+            time.sleep(1)
             if not self._running: break
+            print_letters([w,e,l,c,o,m,e],255,0,0)
             time.sleep(1)
             if not self._running: break
             #creates a moving underline animation
