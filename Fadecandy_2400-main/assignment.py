@@ -185,8 +185,35 @@ class Animation_5(StartStopAnimation):
             count +=1
             time.sleep(0.01) #response time to check for any imput
 
-
-            #make loop time 0.1 or 0.01 sec and make cars more every 10 or 100 loops
+class Animation_6(StartStopAnimation):
+    """creates outro animation thanking the user"""
+    def run(self):
+        led_colour=[(0,0,0)]*360 #set blank screen
+        while self._running:
+            for x in range(0, 360, 3): #increment hue in 3s
+                rgb = hsv_convert(x) #get rgb values from hue
+                led_colour = [rgb]*360 #assign rgb colours
+                client.put_pixels(led_colour) #print rgb colours to emulator
+                if not self._running: break
+                time.sleep(0.01)
+            for x in range(3):
+                led_colour = [(0,0,0)]*360 #set blank screen
+                client.put_pixels(led_colour)
+                if not self._running: break
+                time.sleep(0.5)
+                print_letters([t,h,a,n,k,space,y,o,u],255,255,255) #prints 'thank you' to emulator
+                if not self._running: break
+                time.sleep(1)
+            if not self._running: break
+            pixl = 0
+            #fill screen with green from top left and bottom right
+            while pixl<180: #meet halfway
+                led_colour[pixl] = (0,255,0) #turn each pixel green one by one from pixel 0
+                led_colour[359-pixl] = (0,255,0) #turn each pixel green one by one from pixel 359
+                client.put_pixels(led_colour)
+                if not self._running: break
+                time.sleep(0.01)
+                pixl += 1 #increment pixel count
 
 #assign animation objects to variables    
 animation_1 = Animation_1()
@@ -194,6 +221,7 @@ animation_2 = Animation_2()
 animation_3 = Animation_3()
 animation_4 = Animation_4()
 animation_5 = Animation_5()
+animation_6 = Animation_6()
 
 def click(number): 
     #call on() method on all animations
@@ -202,6 +230,7 @@ def click(number):
     animation_3.on()
     animation_4.on()
     animation_5.on()
+    animation_6.on()
     animation_choice(number) #start animation_*number*
 
 def pop_up_name():
@@ -251,6 +280,7 @@ def stop_animation(): #terminates all animations
     animation_3.terminate()
     animation_4.terminate()
     animation_5.terminate()
+    animation_6.terminate()
 
 def generate_bot_car(): #generates bot car in random lane
     n = randrange(4) #determines which lane the top of the car will be on
@@ -310,6 +340,10 @@ def animation_choice(number): #starts chosen animation by calling .run() method
 
         case 5: #play car hame
             animation_5.run()
+
+        case 6: #author's outro
+            animation_6.run()
+
         case _: #show error popup if anything other than numbers 1-5 are chosen
             tkinter.messagebox.showerror(title = "Error", message = "Option not recognised") 
 
@@ -329,9 +363,11 @@ button4 = Button(window, text = "4. Potentiometer hue control", width = 30, comm
 button4.pack(pady = 5)
 button5 = Button(window, text = "5. Car game", width = 30, command = lambda: start_new_thread(click,5))
 button5.pack(pady = 5)
-#creates button widget for button to stop animation
-button6 = Button(window, text = "Stop animation", fg = "red", width = 35, command = lambda: start_new_thread(stop_animation()))
+button6 = Button(window, text = "6. Outro", width = 30, command = lambda: start_new_thread(click,6))
 button6.pack(pady = 5)
+#creates button widget for button to stop animation
+button7 = Button(window, text = "Stop animation", fg = "red", width = 35, command = lambda: start_new_thread(stop_animation()))
+button7.pack(pady = 5)
 nthrd = 0 #sets thread count to 0
 led_colour=[(0,0,0)]*360 #sets a blank screen
 _s = 1.0 #used to set maximum colour to hsv chart
