@@ -74,10 +74,11 @@ class Animation_2(StartStopAnimation):
                 for x in range(360):
                     #get rgb equivalent for 360 hues
                     rgb = hsv_convert(x)
-                    #print(rgb) #debug
-                    draw_undreline(rgb,0) #set colour to underline
+                    for n in range(300, 360): #choose pixels for bottom line
+                        led_colour[n] = rgb #make pixel colour equal to hue
+                    client.put_pixels(led_colour)
                     if not self._running: break
-                    time.sleep(0.1)
+                    time.sleep(0.01)
                 break
             else:
                 tkinter.messagebox.showerror(title = "Error", message = "Name is too long") #show error message box if inputted name is too long
