@@ -81,3 +81,4 @@ It's highly recommended to perform any colour fading in an HSV space as opposed 
 - 60by6.jpg - use this as a template to easily plan templates and check led numbers.
 - colour spaces.pdf - basic information on the difference between RGB and HSV. 
 - Fadecandy exercises.pdf - some simple tasks to get you started.
+- letters.py - used to store LED coordinates for letters A-Z and 'space'
