@@ -2,7 +2,7 @@
 
 ## Assignment
 
-Assignment file can be ran in python 3.10 using IDLE and will open a tkinter window with 6 animation buttons and a stop animation button when ran
+Assignment.py file can be ran in python 3.10 using IDLE and will open a tkinter window with 6 animation buttons and a stop animation button when ran
 
 The LED simulator must be running or have physical LEDs connected to show the animations
 
