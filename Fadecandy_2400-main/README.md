@@ -32,6 +32,8 @@ to
 ```
 where COMn is the port the arduino is connected to. \Fadecandy_2400-main\potentiometer_hsv\potentiometer_hsv.ino file can be used on an arduino uno to get reading from the potentiometer on pin A0 and print it to serial to be used by python. The potentiometer can be rotated to shift through 360 hues on the LEDs.
 
+Restart arduino scrip if you get a 'cannot convert to float error' and wait a bit before running animation
+
 ###### Animation 5 - Car gme
 
 The fith button will open a pop up window and start an interactive car game animation on the LEDs. The 'w' and 's' keys can be used to move the user car on the right up and down respectively. The text box in the pop up window must be selected for the 'w' and 's' commands to move the car. The purpose of the game is to dodge incoming cars by moving out of the way. If the user can collides with any incoming bot car from any angle, the game stops and a game over message is printed to the LEDs.
